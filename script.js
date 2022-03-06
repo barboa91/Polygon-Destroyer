@@ -7,6 +7,8 @@ let rightPressed
 let leftPressed
 let upPressed
 let downPressed
+let tempdx
+let tempdy
 
 let clip = [4,5,6];
 
@@ -37,9 +39,11 @@ let pOne = {
 let bullet = {
     x :pOne.posX,
     y:pOne.posY,
-    dx : 2,
-    dy : 5
+    dx : 0,
+    dy : 0
 }
+
+
 let playerMove = (obj) =>{
     if(rightPressed) {
         obj.posX+= 7;
@@ -76,19 +80,19 @@ let dProjectile = () =>{
         return;
     }
     ctx.beginPath();
-    ctx.arc(xyarr[0], xyarr[1], 3, 0, Math.PI*2);
+    ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI*2);
     ctx.fillStyle = "#FF0000";
     ctx.fill();
     ctx.closePath();
 
-    bullet.x += bullet.dx
-    bullet.y += bullet.dy
+    bullet.x += tempdx
+    bullet.y += tempdy
 }
 
 let draw = () =>{
-   // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     dPlayer();
-   // dProjectile();
+    dProjectile();
         //requestAnimationFrame(draw);
 }
 setInterval(draw,10)
@@ -98,9 +102,13 @@ setInterval(draw,10)
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
-    // let rise = relativeY - pOne.posY;
-    // let run = relativeX - pOne.posY;
+     let rise = relativeXY[1] - pOne.posY;
+     let run = relativeXY[0] - pOne.posX    ;
+    bullet.x = pOne.posX
+    bullet.y = pOne.posY
 
+    tempdx = run * 0.02
+    tempdy = rise * 0.02
     //console.log(getMousePos(ctx,e))
     ctx.beginPath();
     ctx.arc(relativeXY[0], relativeXY[1], 3, 0, Math.PI*2); // do math to find propper x y of mouse on the canvas
