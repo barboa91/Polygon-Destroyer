@@ -52,6 +52,9 @@ let playerMove = (obj) =>{
         }else if(downPressed){
             obj.posY += 7;
         }
+        if(obj.posX + obj.pRadius > canvas.width){
+            obj.posX = canvas.width - obj.pRadius
+        }
     }
     else if(leftPressed) {
         obj.posX -= 7;
@@ -66,6 +69,15 @@ let playerMove = (obj) =>{
     else if(downPressed) {
         obj.posY += 7;
     }
+    if(obj.posX - obj.pRadius < 0){
+        obj.posX = 0 + obj.pRadius
+    }
+    if(obj.posY - obj.pRadius < 0){
+        obj.posY = 0 + obj.pRadius
+    }
+    if(obj.posY + obj.pRadius > canvas.height){
+        obj.posY = canvas.height - obj.pRadius
+    }   
 }
 let dPlayer = () =>{
     playerMove(pOne)
