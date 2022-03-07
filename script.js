@@ -21,6 +21,7 @@ let tempdy
 let ms = 3
 let mobs = []
 let score = 0
+spawnTime = 2000
 
 let clip = {
     round:"bullet",
@@ -31,7 +32,8 @@ let pOne = {                                // This is the player and the starti
     posY : canvas.height/2,
     pColor : '#009900',
     pRadius : 20,
-    mobsKilled : 0
+    mobsKilled : 0,
+    hp : 100
 }
 class Projectile {                          //this is the class for projectile so that projectiles can be created
     constructor(x,y,dx,dy){
@@ -57,6 +59,7 @@ class Mob {
     dx = Math.floor(Math.random()*10) - 5;
     dy =  Math.floor(Math.random()*10) - 5;
     alive = true;
+    attack = false;
     worth(){ return Math.floor((this.x * this.y)/1000) };
 }
 
@@ -168,6 +171,7 @@ let collisionMob = () =>{
                     if(mobs[n].alive){
                         score += mobs[n].worth();
                         pOne.mobsKilled++;
+                        spawnTime -=100;
                     }
                     mobs[n].alive = false;
                     return;
@@ -180,21 +184,28 @@ let collisionMob = () =>{
 
     for (let i = 0;i < mobs.length; i++){
         if(mobs[i].x+mobs[i].width > canvas.width || mobs[i].x < 0){
-
             mobs[i].dx =-1* mobs[i].dx;
         }
         if(mobs[i].y+mobs[i].height > canvas.height || mobs[i].y < 0){
             mobs[i].dy =-1* mobs[i].dy;
         }
+        if((pOne.posX> mobs[i].x && pOne.posX <mobs[i].x + mobs[i].width) && (pOne.posY > mobs[i].y && pOne.posY <mobs[i].y + mobs[i].height)){
+            if(mobs[i].alive){
+                pOne.hp --;
+            }
+        } 
+
     }
-
-
 }
 
 let drawScore = () => {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#8008135";
     ctx.fillText("Score: "+ score, 8, 20);
+    ctx.fillText("Polys Destroyed: " + pOne.mobsKilled, 8, 40);
+    ctx.fillText("Hit Points : " + pOne.hp, 8, 60);
+
+
 }
 
 let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHERE ALL THE ACTION HAPPENS
@@ -204,9 +215,19 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
     dProjectile();
     collisionMob();
     drawScore();
+    //setInterval(addMob,5000);
 
     requestAnimationFrame(draw)// This is the last thing that is called in the function so that it calls the draw function again
 }
+
+
+// ███████╗██╗░░░██╗███████╗███╗░░██╗████████╗  ██╗░░░░░██╗░██████╗████████╗███████╗███╗░░██╗███████╗██████╗░░██████╗
+// ██╔════╝██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██║░░░░░██║██╔════╝╚══██╔══╝██╔════╝████╗░██║██╔════╝██╔══██╗██╔════╝
+// █████╗░░╚██╗░██╔╝█████╗░░██╔██╗██║░░░██║░░░  ██║░░░░░██║╚█████╗░░░░██║░░░█████╗░░██╔██╗██║█████╗░░██████╔╝╚█████╗░
+// ██╔══╝░░░╚████╔╝░██╔══╝░░██║╚████║░░░██║░░░  ██║░░░░░██║░╚═══██╗░░░██║░░░██╔══╝░░██║╚████║██╔══╝░░██╔══██╗░╚═══██╗
+// ███████╗░░╚██╔╝░░███████╗██║░╚███║░░░██║░░░  ███████╗██║██████╔╝░░░██║░░░███████╗██║░╚███║███████╗██║░░██║██████╔╝
+// ╚══════╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚══════╝╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═════╝░
+
 // YOU ARE HERE, YOU NEED TO ADD A CLASS EACH TIME THIS IS CALLED AND MAYBE DELETE THE OTHERS SO YOU DONT RUN OUT OF MEMORY?
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
@@ -226,7 +247,9 @@ let clickHandler = (e) => {
 
     }else clip.clipArr.push(bullet);
     //pOne.pRadius--;                  // This shrinks the ball every time that you shoot
-    console.log(mobs[0]);
+
+   // console.log(Date.now)
+
 }
 let keyDownHandler = (e) =>{
     if(e.key == "d" || e.key == "ArrowRight") {
@@ -255,19 +278,11 @@ let keyUpHandler = (e) =>{
         downPressed = false;
     }
 }
-
-// ███████╗██╗░░░██╗███████╗███╗░░██╗████████╗  ██╗░░░░░██╗░██████╗████████╗███████╗███╗░░██╗███████╗██████╗░░██████╗
-// ██╔════╝██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██║░░░░░██║██╔════╝╚══██╔══╝██╔════╝████╗░██║██╔════╝██╔══██╗██╔════╝
-// █████╗░░╚██╗░██╔╝█████╗░░██╔██╗██║░░░██║░░░  ██║░░░░░██║╚█████╗░░░░██║░░░█████╗░░██╔██╗██║█████╗░░██████╔╝╚█████╗░
-// ██╔══╝░░░╚████╔╝░██╔══╝░░██║╚████║░░░██║░░░  ██║░░░░░██║░╚═══██╗░░░██║░░░██╔══╝░░██║╚████║██╔══╝░░██╔══██╗░╚═══██╗
-// ███████╗░░╚██╔╝░░███████╗██║░╚███║░░░██║░░░  ███████╗██║██████╔╝░░░██║░░░███████╗██║░╚███║███████╗██║░░██║██████╔╝
-// ╚══════╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚══════╝╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═════╝░
-
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("click",clickHandler,false);
 
 
 addMob(); // ADDING one mob for collision testing
-
+setInterval(addMob,spawnTime);
 draw();// Need to call this to start the game
