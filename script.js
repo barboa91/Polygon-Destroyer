@@ -9,13 +9,9 @@ let upPressed
 let downPressed
 let tempdx
 let tempdy
+let ms = 3
 
 let clip = [4,5,6];
-
-// let mousePos = {
-//     x : 0,
-//     y : 0
-// }
 
 let relMouseCord = (e) =>{
     let xy = [];
@@ -24,14 +20,10 @@ let relMouseCord = (e) =>{
     return xy;
 }
 
-console.log(window)
-
 let pOne = {
     posX : canvas.width/2,
     posY : canvas.height/2,
-    pColor : '#999900',
-    dX : 2,  //This is test movement   
-    dY : -2, //This is test movement
+    pColor : '#009900',
     pRadius : 20
 }
 
@@ -46,28 +38,28 @@ let bullet = {
 
 let playerMove = (obj) =>{
     if(rightPressed) {
-        obj.posX+= 7;
+        obj.posX+= ms;
         if(upPressed){
-            obj.posY -= 7;
+            obj.posY -= ms;
         }else if(downPressed){
-            obj.posY += 7;
+            obj.posY += ms;
         }
         if(obj.posX + obj.pRadius > canvas.width){
             obj.posX = canvas.width - obj.pRadius
         }
     }
     else if(leftPressed) {
-        obj.posX -= 7;
+        obj.posX -= ms;
         if(upPressed){
-            obj.posY -= 7;
+            obj.posY -= ms;
         }else if(downPressed){
-            obj.posY += 7;
+            obj.posY += ms;
         }        
     }else if(upPressed) {
-         obj.posY-= 7;
+         obj.posY-= ms;
      }
     else if(downPressed) {
-        obj.posY += 7;
+        obj.posY += ms;
     }
     if(obj.posX - obj.pRadius < 0){
         obj.posX = 0 + obj.pRadius
@@ -83,7 +75,7 @@ let dPlayer = () =>{
     playerMove(pOne)
     ctx.beginPath();
     ctx.arc(pOne.posX, pOne.posY, pOne.pRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = pOne.pColor;
     ctx.fill();
     ctx.closePath();
 }
@@ -93,7 +85,7 @@ let dProjectile = () =>{
     }
     ctx.beginPath();
     ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI*2);
-    ctx.fillStyle = "#FF0000";
+    ctx.fillStyle = "#FF00FF";
     ctx.fill();
     ctx.closePath();
 
@@ -114,13 +106,18 @@ setInterval(draw,10)
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
-     let rise = relativeXY[1] - pOne.posY;
-     let run = relativeXY[0] - pOne.posX    ;
+    let rise = relativeXY[1] - pOne.posY;
+    let run = relativeXY[0] - pOne.posX;
+    
+    let angle = Math.atan2(rise,run) 
     bullet.x = pOne.posX
     bullet.y = pOne.posY
+    
+    tempdx = Math.cos(angle) * 5
+    tempdy = Math.sin(angle) * 5
 
-    tempdx = run * 0.02
-    tempdy = rise * 0.02
+    pOne.pRadius--;
+
     //console.log(getMousePos(ctx,e))
     ctx.beginPath();
     ctx.arc(relativeXY[0], relativeXY[1], 3, 0, Math.PI*2); // do math to find propper x y of mouse on the canvas
