@@ -1,8 +1,17 @@
 
 let canvas = document.getElementById("game-content");
 let ctx = canvas.getContext("2d");
-ctx.canvas.width  = 1024; // Set this information equal to the box parameters in the CSS. If it is different there will be a disconnect between the mouse click position and canvas position
-ctx.canvas.height = 526;
+ctx.canvas.width  = 1024; 
+ctx.canvas.height = 526;// Set this information equal to the box parameters in the CSS. If it is different there will be a disconnect between the mouse click position and canvas position
+
+
+// ██╗░░░██╗░█████╗░██████╗░██╗░█████╗░██████╗░██╗░░░░░███████╗░██████╗
+// ██║░░░██║██╔══██╗██╔══██╗██║██╔══██╗██╔══██╗██║░░░░░██╔════╝██╔════╝
+// ╚██╗░██╔╝███████║██████╔╝██║███████║██████╦╝██║░░░░░█████╗░░╚█████╗░
+// ░╚████╔╝░██╔══██║██╔══██╗██║██╔══██║██╔══██╗██║░░░░░██╔══╝░░░╚═══██╗
+// ░░╚██╔╝░░██║░░██║██║░░██║██║██║░░██║██████╦╝███████╗███████╗██████╔╝
+// ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝╚═╝░░╚═╝╚═════╝░╚══════╝╚══════╝╚═════╝░
+
 let rightPressed
 let leftPressed
 let upPressed
@@ -15,30 +24,13 @@ let clip = {
     round:"bullet",
     clipArr : []
 };
-
-let relMouseCord = (e) =>{
-    let xy = [];
-    xy.push((e.clientX - canvas.offsetLeft));
-    xy.push((e.clientY - canvas.offsetTop));
-    return xy;
-}
-// This is the player and the starting attributes
-let pOne = {
+let pOne = {                                // This is the player and the starting attributes
     posX : canvas.width/2,
     posY : canvas.height/2,
     pColor : '#009900',
     pRadius : 20
 }
-
-// Testing bullet
-// let bullet = {
-//     x :pOne.posX,
-//     y:pOne.posY,
-//     dx : 0,
-//     dy : 0
-// }
-
-class Projectile {
+class Projectile {                          //this is the class for projectile so that projectiles can be created
     constructor(x,y,dx,dy){
         this.x = x;
         this.y = y;
@@ -49,8 +41,20 @@ class Projectile {
     color = '#FF0000';
 }
 
+// ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
+// ██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
+// █████╗░░██║░░░██║██╔██╗██║██║░░╚═╝░░░██║░░░██║██║░░██║██╔██╗██║╚█████╗░
+// ██╔══╝░░██║░░░██║██║╚████║██║░░██╗░░░██║░░░██║██║░░██║██║╚████║░╚═══██╗
+// ██║░░░░░╚██████╔╝██║░╚███║╚█████╔╝░░░██║░░░██║╚█████╔╝██║░╚███║██████╔╝
+// ╚═╝░░░░░░╚═════╝░╚═╝░░╚══╝░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░
 
-let playerMove = (obj) =>{
+let relMouseCord = (e) =>{                  //this gets the XY coordinates of the mouse relative to the player
+    let xy = [];
+    xy.push((e.clientX - canvas.offsetLeft));
+    xy.push((e.clientY - canvas.offsetTop));
+    return xy;
+}
+let playerMove = (obj) =>{                  //The function inspects keys press for movement
     if(rightPressed) {
         obj.posX+= ms;
         if(upPressed){
@@ -85,7 +89,7 @@ let playerMove = (obj) =>{
         obj.posY = canvas.height - obj.pRadius
     }   
 }
-let dPlayer = () =>{
+let dPlayer = () =>{                        //This draws the player 
     playerMove(pOne)
     ctx.beginPath();
     ctx.arc(pOne.posX, pOne.posY, pOne.pRadius, 0, Math.PI*2);
@@ -93,16 +97,10 @@ let dPlayer = () =>{
     ctx.fill();
     ctx.closePath();
 }
-let dProjectile = () =>{
+let dProjectile = () =>{                    // This draws the projectiles from the player
     if(clip.clipArr.length == 0){
         return;
     }
-
-    // ctx.beginPath();
-    // ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI*2);
-    // ctx.fillStyle = "#FF00FF";
-    // ctx.fill();
-    // ctx.closePath();
 
     for (i = 0; i < clip.clipArr.length; i++){
         ctx.beginPath();
@@ -114,49 +112,39 @@ let dProjectile = () =>{
         clip.clipArr[i].y += clip.clipArr[i].dy;
     }
 
-    // bullet.x += tempdx
-    // bullet.y += tempdy
 }
-
-let draw = () =>{
+let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHERE ALL THE ACTION HAPPENS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dPlayer();
     dProjectile();
-        //requestAnimationFrame(draw);
+
+
+    requestAnimationFrame(draw)// This is the last thing that is called in the function so that it calls the draw function again
 }
-setInterval(draw,10);
 // YOU ARE HERE, YOU NEED TO ADD A CLASS EACH TIME THIS IS CALLED AND MAYBE DELETE THE OTHERS SO YOU DONT RUN OUT OF MEMORY?
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
     let rise = relativeXY[1] - pOne.posY;
     let run = relativeXY[0] - pOne.posX;
-    let angle = Math.atan2(rise,run) 
-    tempdx = Math.cos(angle) * 5
-    tempdy = Math.sin(angle) * 5
+    let angle = Math.atan2(rise,run)    // This gets the angle from the player to where the mouse is
+    tempdx = Math.cos(angle) * 5        // This sets the velocity of the projectile in the X direction
+    tempdy = Math.sin(angle) * 5        // This sets the velocity of the projectile in the Y direction
+    let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy)
+
+    // add a for loop for clip size || the problem is that once you get to the last bullet all of the others disappear maybe have alternating clips?
+    if (clip.clipArr.length > 10){
+        clip.clipArr = [];
+        clip.clipArr.push(bullet);
+
+    }else clip.clipArr.push(bullet);
 
 
-    let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy )
 
-    clip.clipArr.push(bullet);
+    //pOne.pRadius--;                  // This shrinks the ball every time that you shoot
 
-
-   
-    bullet.x = pOne.posX
-    bullet.y = pOne.posY
-    
-
-
-    pOne.pRadius--;
-
-    //console.log(getMousePos(ctx,e))
-    ctx.beginPath();
-    ctx.arc(relativeXY[0], relativeXY[1], 3, 0, Math.PI*2); // do math to find propper x y of mouse on the canvas
-    ctx.fillStyle = "#FF0000";
-    ctx.fill();
-    ctx.closePath();
 }
-function keyDownHandler(e) {
+let keyDownHandler = (e) =>{
     if(e.key == "d" || e.key == "ArrowRight") {
         rightPressed = true;
     }
@@ -170,7 +158,7 @@ function keyDownHandler(e) {
     }
 
 }
-function keyUpHandler(e) {
+let keyUpHandler = (e) =>{
     if(e.key == "d" || e.key == "ArrowRight") {
         rightPressed = false;
     }
@@ -184,6 +172,15 @@ function keyUpHandler(e) {
     }
 }
 
+// ███████╗██╗░░░██╗███████╗███╗░░██╗████████╗  ██╗░░░░░██╗░██████╗████████╗███████╗███╗░░██╗███████╗██████╗░░██████╗
+// ██╔════╝██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██║░░░░░██║██╔════╝╚══██╔══╝██╔════╝████╗░██║██╔════╝██╔══██╗██╔════╝
+// █████╗░░╚██╗░██╔╝█████╗░░██╔██╗██║░░░██║░░░  ██║░░░░░██║╚█████╗░░░░██║░░░█████╗░░██╔██╗██║█████╗░░██████╔╝╚█████╗░
+// ██╔══╝░░░╚████╔╝░██╔══╝░░██║╚████║░░░██║░░░  ██║░░░░░██║░╚═══██╗░░░██║░░░██╔══╝░░██║╚████║██╔══╝░░██╔══██╗░╚═══██╗
+// ███████╗░░╚██╔╝░░███████╗██║░╚███║░░░██║░░░  ███████╗██║██████╔╝░░░██║░░░███████╗██║░╚███║███████╗██║░░██║██████╔╝
+// ╚══════╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚══════╝╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═════╝░
+
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("click",clickHandler,false);
+
+draw();// Need to call this to start the game
