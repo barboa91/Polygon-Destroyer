@@ -13,9 +13,14 @@ For me part of this project is to improve my skills in all aspects of javaScript
 
 ***
 
-### Links
+### Technologies Used
 
-[Trello](https://trello.com/b/KY8w8kvw/bulbasaur)
+- JavaScript
+    - I will not be using any frameworks with this project
+- CSS
+- HTML
+
+
 
 ## Where I am
 
@@ -31,3 +36,11 @@ I have also implimented collision detection on the walls of the game box so that
 I need to add enemies and collision detection for them as well. after I am able to add collision detection, I will be able to remove them as well as increase the score.
 
 I also need to add a game over screen. As well as style the page.
+
+***
+
+### Links
+
+[Trello](https://trello.com/b/KY8w8kvw/bulbasaur)
+
+***
