@@ -19,6 +19,8 @@ let downPressed
 let tempdx
 let tempdy
 let ms = 3
+let mobs = []
+let score = 0
 
 let clip = {
     round:"bullet",
@@ -28,7 +30,8 @@ let pOne = {                                // This is the player and the starti
     posX : canvas.width/2,
     posY : canvas.height/2,
     pColor : '#009900',
-    pRadius : 20
+    pRadius : 20,
+    mobsKilled : 0
 }
 class Projectile {                          //this is the class for projectile so that projectiles can be created
     constructor(x,y,dx,dy){
@@ -39,6 +42,22 @@ class Projectile {                          //this is the class for projectile s
     }
     rad = 5;
     color = '#FF0000';
+}
+
+class Mob {
+    constructor(shape, x, y, hp){
+        this.shape = shape;
+        this.x = x;
+        this.y = y;
+        this.hp = hp;
+    }
+    width = Math.floor(Math.random()*20 + 30);
+    height = Math.floor(Math.random()*20 + 30);
+
+    dx = Math.floor(Math.random()*10) - 5;
+    dy =  Math.floor(Math.random()*10) - 5;
+    alive = true;
+    worth(){ return Math.floor((this.x * this.y)/1000) };
 }
 
 // ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
@@ -97,7 +116,7 @@ let dPlayer = () =>{                        //This draws the player
     ctx.fill();
     ctx.closePath();
 }
-let dProjectile = () =>{                    // This draws the projectiles from the player
+let dProjectile = () =>{                    //This draws the projectiles from the player
     if(clip.clipArr.length == 0){
         return;
     }
@@ -113,11 +132,78 @@ let dProjectile = () =>{                    // This draws the projectiles from t
     }
 
 }
+let dMob = () =>{                           //This draws all the mobs
+    
+    for(i = 0; i < mobs.length; i++){
+        if(mobs[i].alive){
+            ctx.beginPath();
+            ctx.lineWidth = "4";
+            ctx.strokeStyle = "green";
+            ctx.rect(mobs[i].x, mobs[i].y, mobs[i].width, mobs[i].height );
+            ctx.fillStyle = "yellow"
+            ctx.fill();
+            mobs[i].x += mobs[i].dx
+            mobs[i].y += mobs[i].dy
+
+        }
+    }
+}
+let addMob = () =>{                         // This adds the mob to the list of creatures Need to fix adding mob too close to edge
+    let randX = Math.floor(Math.random()*canvas.width);
+    let randY = Math.floor(Math.random()*canvas.height);
+
+    let nMob = new Mob("rectangle", randX, randY, 10);
+    mobs.push(nMob);
+
+
+
+}
+let collisionMob = () =>{
+    if(mobs.length == 0){
+        return;
+    }else {
+        for(let i = 0; i < clip.clipArr.length; i++){
+            for(let n = 0; n <mobs.length; n++){
+                if((clip.clipArr[i].x > mobs[n].x && clip.clipArr[i].x <mobs[n].x + mobs[n].width) && (clip.clipArr[i].y > mobs[n].y && clip.clipArr[i].y <mobs[n].y + mobs[n].height ) ){
+                    if(mobs[n].alive){
+                        score += mobs[n].worth();
+                        pOne.mobsKilled++;
+                    }
+                    mobs[n].alive = false;
+                    return;
+                }
+            }
+        }
+    }
+
+// sometimes they get stuck on the wall 
+
+    for (let i = 0;i < mobs.length; i++){
+        if(mobs[i].x+mobs[i].width > canvas.width || mobs[i].x < 0){
+
+            mobs[i].dx =-1* mobs[i].dx;
+        }
+        if(mobs[i].y+mobs[i].height > canvas.height || mobs[i].y < 0){
+            mobs[i].dy =-1* mobs[i].dy;
+        }
+    }
+
+
+}
+
+let drawScore = () => {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#8008135";
+    ctx.fillText("Score: "+ score, 8, 20);
+}
+
 let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHERE ALL THE ACTION HAPPENS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dPlayer();
+    dMob();
     dProjectile();
-
+    collisionMob();
+    drawScore();
 
     requestAnimationFrame(draw)// This is the last thing that is called in the function so that it calls the draw function again
 }
@@ -134,15 +220,13 @@ let clickHandler = (e) => {
 
     // add a for loop for clip size || the problem is that once you get to the last bullet all of the others disappear maybe have alternating clips?
     if (clip.clipArr.length > 10){
+        addMob();                           //ADDING MOB AFTER CLIP EMPTY
         clip.clipArr = [];
         clip.clipArr.push(bullet);
 
     }else clip.clipArr.push(bullet);
-
-
-
     //pOne.pRadius--;                  // This shrinks the ball every time that you shoot
-
+    console.log(mobs[0]);
 }
 let keyDownHandler = (e) =>{
     if(e.key == "d" || e.key == "ArrowRight") {
@@ -182,5 +266,8 @@ let keyUpHandler = (e) =>{
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("click",clickHandler,false);
+
+
+addMob(); // ADDING one mob for collision testing
 
 draw();// Need to call this to start the game
