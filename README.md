@@ -23,11 +23,11 @@ So far, I have been able to make the player move in all directions on the page a
 
 I have also implimented collision detection on the walls of the game box so that the player will not be able to escape the game area. I have 3 event listeners that currently listen for mouseclicks to shoot, and key ups and downs for movement.
 
-![this is an image](https://i.imgur.com/uRt9awE.gifv)
+![this is an image](https://i.imgur.com/uRt9awE.gif)
 
 
 ## What I need to do
 
 I need to add enemies and collision detection for them as well. after I am able to add collision detection, I will be able to remove them as well as increase the score.
 
-I also need to add a game over screen.
+I also need to add a game over screen. As well as style the page.

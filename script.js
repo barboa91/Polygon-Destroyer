@@ -11,7 +11,10 @@ let tempdx
 let tempdy
 let ms = 3
 
-let clip = [4,5,6];
+let clip = {
+    round:"bullet",
+    clipArr : []
+};
 
 let relMouseCord = (e) =>{
     let xy = [];
@@ -19,7 +22,7 @@ let relMouseCord = (e) =>{
     xy.push((e.clientY - canvas.offsetTop));
     return xy;
 }
-
+// This is the player and the starting attributes
 let pOne = {
     posX : canvas.width/2,
     posY : canvas.height/2,
@@ -27,12 +30,23 @@ let pOne = {
     pRadius : 20
 }
 
+// Testing bullet
+// let bullet = {
+//     x :pOne.posX,
+//     y:pOne.posY,
+//     dx : 0,
+//     dy : 0
+// }
 
-let bullet = {
-    x :pOne.posX,
-    y:pOne.posY,
-    dx : 0,
-    dy : 0
+class Projectile {
+    constructor(x,y,dx,dy){
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+    }
+    rad = 5;
+    color = '#FF0000';
 }
 
 
@@ -80,17 +94,28 @@ let dPlayer = () =>{
     ctx.closePath();
 }
 let dProjectile = () =>{
-    if(clip.length == 0){
+    if(clip.clipArr.length == 0){
         return;
     }
-    ctx.beginPath();
-    ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI*2);
-    ctx.fillStyle = "#FF00FF";
-    ctx.fill();
-    ctx.closePath();
 
-    bullet.x += tempdx
-    bullet.y += tempdy
+    // ctx.beginPath();
+    // ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI*2);
+    // ctx.fillStyle = "#FF00FF";
+    // ctx.fill();
+    // ctx.closePath();
+
+    for (i = 0; i < clip.clipArr.length; i++){
+        ctx.beginPath();
+        ctx.arc(clip.clipArr[i].x, clip.clipArr[i].y, clip.clipArr[i].rad, 0, Math.PI*2);
+        ctx.fillStyle = clip.clipArr[i].color;
+        ctx.fill();
+        ctx.closePath();
+        clip.clipArr[i].x += clip.clipArr[i].dx;
+        clip.clipArr[i].y += clip.clipArr[i].dy;
+    }
+
+    // bullet.x += tempdx
+    // bullet.y += tempdy
 }
 
 let draw = () =>{
@@ -99,22 +124,28 @@ let draw = () =>{
     dProjectile();
         //requestAnimationFrame(draw);
 }
-setInterval(draw,10)
-//draw();
-
-
+setInterval(draw,10);
+// YOU ARE HERE, YOU NEED TO ADD A CLASS EACH TIME THIS IS CALLED AND MAYBE DELETE THE OTHERS SO YOU DONT RUN OUT OF MEMORY?
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
     let rise = relativeXY[1] - pOne.posY;
     let run = relativeXY[0] - pOne.posX;
-    
     let angle = Math.atan2(rise,run) 
+    tempdx = Math.cos(angle) * 5
+    tempdy = Math.sin(angle) * 5
+
+
+    let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy )
+
+    clip.clipArr.push(bullet);
+
+
+   
     bullet.x = pOne.posX
     bullet.y = pOne.posY
     
-    tempdx = Math.cos(angle) * 5
-    tempdy = Math.sin(angle) * 5
+
 
     pOne.pRadius--;
 
