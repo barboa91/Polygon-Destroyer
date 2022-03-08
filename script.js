@@ -167,8 +167,6 @@ let addMob = () =>{                         // This adds the mob to the list of 
     let nMob = new Mob("rectangle", randX, randY, 10);
     mobs.push(nMob);
 }
-
-
 let collisionMob = () =>{
     if(mobs.length == 0){
         return;
@@ -222,7 +220,7 @@ let collisionMob = () =>{
 
     //pOne.attacked = false;
 }
-let intersects = (mob) =>
+let intersects = (mob) =>                   //Collision detection from Circle to Rectangle Borrowed from stack overflow
 {
     let circleDistancex = Math.abs(pOne.posX - (mob.x + mob.width/2) );
     let circleDistancey = Math.abs(pOne.posY - (mob.y + mob.height/2) );
@@ -249,8 +247,6 @@ let drawScore = () => {
     document.querySelector("#mobs-destroyed").innerText =  `Polys Destroyed: ${pOne.mobsKilled}`;
     ctx.fillText("Hit Points : " + pOne.hp, 8, 60);
     document.querySelector("#hit-points").innerText =  `Hit Points : ${pOne.hp}`;
-
-
 
 }
 
