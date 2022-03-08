@@ -4,6 +4,7 @@ body{
 
 canvas { 
     background: rgb(41, 41, 41);
+    margin: 20px;
     width:  1024px;
     height: 526px;
 
@@ -12,6 +13,7 @@ canvas {
     display: flex;
     justify-content: center;
     margin: 0 auto;
+    flex: wrap;
 }
 
 #left-content{
@@ -20,8 +22,11 @@ canvas {
 
 }
 #main-content{
-    flex-basis: 100%;
+    /* flex-basis: 100%; */
     border: 3px solid black;
+    width:  1024px;
+    height: 526px;
+    padding: 20px;
 
 }
 #right-content{

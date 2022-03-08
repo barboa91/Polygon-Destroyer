@@ -5,6 +5,7 @@ ctx.canvas.width  = 1024;
 ctx.canvas.height = 526;// Set this information equal to the box parameters in the CSS. If it is different there will be a disconnect between the mouse click position and canvas position
 
 
+//Variables
 // ██╗░░░██╗░█████╗░██████╗░██╗░█████╗░██████╗░██╗░░░░░███████╗░██████╗
 // ██║░░░██║██╔══██╗██╔══██╗██║██╔══██╗██╔══██╗██║░░░░░██╔════╝██╔════╝
 // ╚██╗░██╔╝███████║██████╔╝██║███████║██████╦╝██║░░░░░█████╗░░╚█████╗░
@@ -12,6 +13,7 @@ ctx.canvas.height = 526;// Set this information equal to the box parameters in t
 // ░░╚██╔╝░░██║░░██║██║░░██║██║██║░░██║██████╦╝███████╗███████╗██████╔╝
 // ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝╚═╝░░╚═╝╚═════╝░╚══════╝╚══════╝╚═════╝░
 
+let gameOver = false;
 let rightPressed
 let leftPressed
 let upPressed
@@ -22,6 +24,7 @@ let ms = 3
 let mobs = []
 let score = 0
 spawnTime = 2000
+let safe = true
 
 let clip = {
     round:"bullet",
@@ -33,7 +36,9 @@ let pOne = {                                // This is the player and the starti
     pColor : '#009900',
     pRadius : 20,
     mobsKilled : 0,
-    hp : 100
+    hp : 100,
+    attacked: false
+
 }
 class Projectile {                          //this is the class for projectile so that projectiles can be created
     constructor(x,y,dx,dy){
@@ -63,13 +68,18 @@ class Mob {
     worth(){ return Math.floor((this.x * this.y)/1000) };
 }
 
+//Functions
 // ███████╗██╗░░░██╗███╗░░██╗░█████╗░████████╗██╗░█████╗░███╗░░██╗░██████╗
 // ██╔════╝██║░░░██║████╗░██║██╔══██╗╚══██╔══╝██║██╔══██╗████╗░██║██╔════╝
 // █████╗░░██║░░░██║██╔██╗██║██║░░╚═╝░░░██║░░░██║██║░░██║██╔██╗██║╚█████╗░
 // ██╔══╝░░██║░░░██║██║╚████║██║░░██╗░░░██║░░░██║██║░░██║██║╚████║░╚═══██╗
 // ██║░░░░░╚██████╔╝██║░╚███║╚█████╔╝░░░██║░░░██║╚█████╔╝██║░╚███║██████╔╝
 // ╚═╝░░░░░░╚═════╝░╚═╝░░╚══╝░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░
-
+let gOver = () => {
+    if(pOne.hp < 1){
+        return true
+    }
+}
 let relMouseCord = (e) =>{                  //this gets the XY coordinates of the mouse relative to the player
     let xy = [];
     xy.push((e.clientX - canvas.offsetLeft));
@@ -154,13 +164,11 @@ let dMob = () =>{                           //This draws all the mobs
 let addMob = () =>{                         // This adds the mob to the list of creatures Need to fix adding mob too close to edge
     let randX = Math.floor(Math.random()*canvas.width);
     let randY = Math.floor(Math.random()*canvas.height);
-
     let nMob = new Mob("rectangle", randX, randY, 10);
     mobs.push(nMob);
-
-
-
 }
+
+
 let collisionMob = () =>{
     if(mobs.length == 0){
         return;
@@ -171,7 +179,6 @@ let collisionMob = () =>{
                     if(mobs[n].alive){
                         score += mobs[n].worth();
                         pOne.mobsKilled++;
-                        spawnTime -=100;
                     }
                     mobs[n].alive = false;
                     return;
@@ -189,14 +196,42 @@ let collisionMob = () =>{
         if(mobs[i].y+mobs[i].height > canvas.height || mobs[i].y < 0){
             mobs[i].dy =-1* mobs[i].dy;
         }
-        if((pOne.posX> mobs[i].x && pOne.posX <mobs[i].x + mobs[i].width) && (pOne.posY > mobs[i].y && pOne.posY <mobs[i].y + mobs[i].height)){
-            if(mobs[i].alive){
-                pOne.hp --;
-            }
-        } 
-
+        // if((pOne.posX> mobs[i].x && pOne.posX <mobs[i].x + mobs[i].width) && (pOne.posY > mobs[i].y && pOne.posY <mobs[i].y + mobs[i].height)&& !pOne.attacked){
+        //     console.log(pOne.attacked)
+        //     console.log(pOne.hp)
+        //     if(mobs[i].alive){    
+        //     // Do stuff maybe 
+        //     }
+        // }
     }
+
+    safe = mobs.every(inMob);
+    if(safe){
+        pOne.attacked = false;
+    }
+
+    if(!safe && !pOne.attacked){
+        pOne.hp -= 10;
+        pOne.attacked = true;
+    }
+
+
+
+
+
+
+    //pOne.attacked = false;
 }
+
+let inMob = (mob) =>{
+    
+    if((pOne.posX> mob.x && pOne.posX <mob.x + mob.width) && (pOne.posY > mob.y && pOne.posY <mob.y + mob.height && mob.alive)){
+            return false;
+        }else {
+            return true;
+        }
+    
+    }
 
 let drawScore = () => {
     ctx.font = "16px Arial";
@@ -210,17 +245,30 @@ let drawScore = () => {
 
 let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHERE ALL THE ACTION HAPPENS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    dPlayer();
     dMob();
+    dPlayer();
     dProjectile();
     collisionMob();
     drawScore();
+    if(gOver()){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "160px Arial";
+        ctx.fillStyle = "#8008135";
+        ctx.fillText("GAME OVER", 30, 275);
+        return;
+    }
     //setInterval(addMob,5000);
 
     requestAnimationFrame(draw)// This is the last thing that is called in the function so that it calls the draw function again
 }
 
+let startGame = async () =>{
+    await draw();
 
+   // alert("GAME OVER");
+}
+
+//Event Listeners
 // ███████╗██╗░░░██╗███████╗███╗░░██╗████████╗  ██╗░░░░░██╗░██████╗████████╗███████╗███╗░░██╗███████╗██████╗░░██████╗
 // ██╔════╝██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██║░░░░░██║██╔════╝╚══██╔══╝██╔════╝████╗░██║██╔════╝██╔══██╗██╔════╝
 // █████╗░░╚██╗░██╔╝█████╗░░██╔██╗██║░░░██║░░░  ██║░░░░░██║╚█████╗░░░░██║░░░█████╗░░██╔██╗██║█████╗░░██████╔╝╚█████╗░
@@ -284,5 +332,8 @@ document.addEventListener("click",clickHandler,false);
 
 
 addMob(); // ADDING one mob for collision testing
-setInterval(addMob,spawnTime);
-draw();// Need to call this to start the game
+setInterval(addMob,spawnTime);// add a mob every spawn time
+//draw();// Need to call this to start the game
+
+startGame();
+
