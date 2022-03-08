@@ -20,7 +20,7 @@ let upPressed
 let downPressed
 let tempdx
 let tempdy
-let ms = 3
+let ms = 5
 let mobs = []
 let score = 0
 spawnTime = 2000
@@ -75,7 +75,7 @@ class Mob {
 // ██╔══╝░░██║░░░██║██║╚████║██║░░██╗░░░██║░░░██║██║░░██║██║╚████║░╚═══██╗
 // ██║░░░░░╚██████╔╝██║░╚███║╚█████╔╝░░░██║░░░██║╚█████╔╝██║░╚███║██████╔╝
 // ╚═╝░░░░░░╚═════╝░╚═╝░░╚══╝░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░
-let gOver = () => {
+let gOver = () => {                         //This sends t/f if game is over or not
     if(pOne.hp < 1){
         return true
     }
@@ -205,7 +205,7 @@ let collisionMob = () =>{
         // }
     }
 
-    safe = mobs.every(inMob);
+    safe = mobs.every(intersects);
     if(safe){
         pOne.attacked = false;
     }
@@ -222,23 +222,34 @@ let collisionMob = () =>{
 
     //pOne.attacked = false;
 }
+let intersects = (mob) =>
+{
+    let circleDistancex = Math.abs(pOne.posX - (mob.x + mob.width/2) );
+    let circleDistancey = Math.abs(pOne.posY - (mob.y + mob.height/2) );
 
-let inMob = (mob) =>{
-    
-    if((pOne.posX> mob.x && pOne.posX <mob.x + mob.width) && (pOne.posY > mob.y && pOne.posY <mob.y + mob.height && mob.alive)){
-            return false;
-        }else {
-            return true;
-        }
-    
-    }
+    if (circleDistancex > (mob.width/2 + pOne.pRadius)) { return true; }
+    if (circleDistancey > (mob.height/2 + pOne.pRadius)) { return true; }
+
+    if (circleDistancex <= (mob.width/2)) { return false; } 
+    if (circleDistancey <= (mob.height/2)) { return false; }
+
+    let cornerDistance_sq = (circleDistancex - mob.width/2)^2 +
+                            (circleDistancey - mob.height/2)^2;
+
+    return !(cornerDistance_sq <= (pOne.pRadius^2));
+}
 
 let drawScore = () => {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#8008135";
     ctx.fillText("Score: "+ score, 8, 20);
+    
+    document.querySelector("#score").innerText =  `Score : ${score}`;
     ctx.fillText("Polys Destroyed: " + pOne.mobsKilled, 8, 40);
+    document.querySelector("#mobs-destroyed").innerText =  `Polys Destroyed: ${pOne.mobsKilled}`;
     ctx.fillText("Hit Points : " + pOne.hp, 8, 60);
+    document.querySelector("#hit-points").innerText =  `Hit Points : ${pOne.hp}`;
+
 
 
 }
@@ -250,7 +261,7 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
     dProjectile();
     collisionMob();
     drawScore();
-    if(gOver()){
+    if(gOver()){                            //If game is over clear screen and draw GO
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = "160px Arial";
         ctx.fillStyle = "#8008135";
@@ -265,7 +276,6 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
 let startGame = async () =>{
     await draw();
 
-   // alert("GAME OVER");
 }
 
 //Event Listeners
@@ -276,7 +286,6 @@ let startGame = async () =>{
 // ███████╗░░╚██╔╝░░███████╗██║░╚███║░░░██║░░░  ███████╗██║██████╔╝░░░██║░░░███████╗██║░╚███║███████╗██║░░██║██████╔╝
 // ╚══════╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚══════╝╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═════╝░
 
-// YOU ARE HERE, YOU NEED TO ADD A CLASS EACH TIME THIS IS CALLED AND MAYBE DELETE THE OTHERS SO YOU DONT RUN OUT OF MEMORY?
 let clickHandler = (e) => {
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
@@ -288,15 +297,13 @@ let clickHandler = (e) => {
     let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy)
 
     // add a for loop for clip size || the problem is that once you get to the last bullet all of the others disappear maybe have alternating clips?
-    if (clip.clipArr.length > 10){
+    if (clip.clipArr.length > 100){
         addMob();                           //ADDING MOB AFTER CLIP EMPTY
         clip.clipArr = [];
         clip.clipArr.push(bullet);
 
     }else clip.clipArr.push(bullet);
     //pOne.pRadius--;                  // This shrinks the ball every time that you shoot
-
-   // console.log(Date.now)
 
 }
 let keyDownHandler = (e) =>{
@@ -337,3 +344,4 @@ setInterval(addMob,spawnTime);// add a mob every spawn time
 
 startGame();
 
+// Borrowed Hit Detection for circle and square with this from this stack overflow page https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
