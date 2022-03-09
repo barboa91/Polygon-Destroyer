@@ -38,4 +38,12 @@ canvas {
 #right-content{
     border: 3px solid black;
     width: 300px;
+    justify-content: center;
+}
+#restart{
+    justify-content: center;
+    width: 200px;
+    height: 100px;
+    border: 3px solid black;
+    margin: 0 auto;
 }

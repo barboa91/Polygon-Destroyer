@@ -23,8 +23,9 @@ let tempdy
 let ms = 5
 let mobs = []
 let score = 0
-spawnTime = 2000
+
 let safe = true
+spawnTime = 2000
 
 let clip = {
     round:"bullet",
@@ -222,19 +223,23 @@ let collisionMob = () =>{
 }
 let intersects = (mob) =>                   //Collision detection from Circle to Rectangle Borrowed from stack overflow
 {
-    let circleDistancex = Math.abs(pOne.posX - (mob.x + mob.width/2) );
-    let circleDistancey = Math.abs(pOne.posY - (mob.y + mob.height/2) );
+        if(!mob.alive){
+            return true;
+        }
+        let circleDistancex = Math.abs(pOne.posX - (mob.x + mob.width/2) );
+        let circleDistancey = Math.abs(pOne.posY - (mob.y + mob.height/2) );
 
-    if (circleDistancex > (mob.width/2 + pOne.pRadius)) { return true; }
-    if (circleDistancey > (mob.height/2 + pOne.pRadius)) { return true; }
+        if (circleDistancex > (mob.width/2 + pOne.pRadius)) { return true; }
+        if (circleDistancey > (mob.height/2 + pOne.pRadius)) { return true; }
 
-    if (circleDistancex <= (mob.width/2)) { return false; } 
-    if (circleDistancey <= (mob.height/2)) { return false; }
+        if (circleDistancex <= (mob.width/2)) { return false; } 
+        if (circleDistancey <= (mob.height/2)) { return false; }
 
-    let cornerDistance_sq = (circleDistancex - mob.width/2)^2 +
-                            (circleDistancey - mob.height/2)^2;
+        let cornerDistance_sq = (circleDistancex - mob.width/2)^2 +
+                                (circleDistancey - mob.height/2)^2;
 
-    return !(cornerDistance_sq <= (pOne.pRadius^2));
+        return !(cornerDistance_sq <= (pOne.pRadius^2));
+    
 }
 
 let drawScore = () => {
@@ -270,7 +275,15 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
 }
 
 let startGame = async () =>{
-    await draw();
+
+    ms = 5
+    mobs = []
+    score = 0
+    safe = true
+    pOne.mobsKilled = 0
+    gameOver = false
+
+    draw();
 
 }
 
@@ -293,13 +306,17 @@ let clickHandler = (e) => {
     let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy)
 
     // add a for loop for clip size || the problem is that once you get to the last bullet all of the others disappear maybe have alternating clips?
-    if (clip.clipArr.length > 100){
+    if (clip.clipArr.length > 10){
         addMob();                           //ADDING MOB AFTER CLIP EMPTY
         clip.clipArr = [];
         clip.clipArr.push(bullet);
 
     }else clip.clipArr.push(bullet);
     //pOne.pRadius--;                  // This shrinks the ball every time that you shoot
+
+    if(e.target.id == "restart"){
+        startGame();
+    }
 
 }
 let keyDownHandler = (e) =>{
