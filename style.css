@@ -1,12 +1,31 @@
 body{
     text-align: center;
+    background-image: url("images/darkness.png");
+    color: white;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+   }
+
+
 canvas { 
-    background: rgb(41, 41, 41);
+    /* background: rgb(41, 41, 41); */
     margin: 20px;
     width:  1024px;
     height: 526px;
+    border: 3px solid white;
 
 }
 .leftbox{
@@ -19,6 +38,8 @@ canvas {
     justify-content: center;
     margin: 0 auto;
     flex: wrap;
+    border: 3px solid white;
+
 }
 
 #left-content{
@@ -29,7 +50,7 @@ canvas {
 }
 #main-content{
     /* flex-basis: 100%; */
-    border: 3px solid black;
+    border: 3px solid rgb(72, 255, 0);
     width:  1024px;
     height: 526px;
     padding: 20px;

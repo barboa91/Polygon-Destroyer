@@ -7,6 +7,10 @@
     <link rel ="stylesheet" href="style.css">
 
     <script defer src="script.js" charset="utf-8"></script>
+        <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap" rel="stylesheet">
 
     <title>Bulbasaur</title>
 </head>
@@ -19,7 +23,7 @@
             <div id = "score" class ="leftbox">Score : </div>
             <div id = "mobs-destroyed" class ="leftbox">Mobs Destroyed :</div>
             <div id = "hit-points" class ="leftbox">Hit Points :</div>
-            <div id = "instructions" class ="leftbox">Use WASD or up, down, left, and right to move.<br/> Use the left mouse button to fire a projectile!<br/> Avoid being hit by the rectangles. You lose 10 hit points every time a rectangle touches your origin point. When you run out of hit points, the game ends.</div>
+            <div id = "controls" class ="leftbox">Use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd><kbd>←</kbd> to move.<br/><br/> Use the left mouse button to fire a projectile!</div>
         </div>
         <!-- <div id="main-content"> -->
             <canvas id="game-content">
@@ -28,6 +32,7 @@
         <!-- </div> -->
         <div id="right-content">Right Side Box
             <div id = "restart">RESTART</div>
+            <div id="instructions">Avoid being hit by the rectangles. You lose 10 hit points every time a rectangle touches you. When you run out of hit points, the game ends.</div>
 
         </div>
     </div>

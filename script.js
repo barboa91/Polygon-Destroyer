@@ -49,7 +49,7 @@ class Projectile {                          //this is the class for projectile s
         this.dy = dy;
     }
     rad = 5;
-    color = '#FF0000';
+    color = '#00f514';
 }
 
 class Mob {
@@ -265,8 +265,9 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
     if(gOver()){                            //If game is over clear screen and draw GO
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = "160px Arial";
+        ctx.fillText("GAME OVER", 30, 275);   
         ctx.fillStyle = "#8008135";
-        ctx.fillText("GAME OVER", 30, 275);
+
         return;
     }
     //setInterval(addMob,5000);
@@ -284,6 +285,7 @@ let startGame = async () =>{
     gameOver = false
 
     draw();
+    alert("Restarting");
 
 }
 
