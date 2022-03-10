@@ -29,13 +29,16 @@ let jerr = new Image();
 jerr.src = "/images/jeremyred.png"
 let angle
 
+let pew1 = new Audio();
+pew1.src = '/sounds/pew1.mp3'
+
 let safe = true
 spawnTime = 2000
 
 let clip = {
     round:"bullet",
     clipArr : []
-};
+}
 let pOne = {                                // This is the player and the starting attributes
     posX : canvas.width/2,
     posY : canvas.height/2,
@@ -128,7 +131,6 @@ let playerMove = (obj) =>{                  //The function inspects keys press f
     }   
 }
 let dPlayer = () =>{                        //This draws the player 
-    playerMove(pOne)
     // ctx.beginPath();
     // ctx.arc(pOne.posX, pOne.posY, pOne.pRadius, 0, Math.PI*2);
     // ctx.fillStyle = pOne.pColor;
@@ -138,6 +140,8 @@ let dPlayer = () =>{                        //This draws the player
     ctx.save();
     ctx.translate(pOne.posX,pOne.posY)
     ctx.rotate(angle);
+    playerMove(pOne)
+
     ctx.drawImage(jer,-19, -20)
     ctx.restore();
 
@@ -297,12 +301,13 @@ let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHE
 }
 
 let startGame = async () =>{
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ms = 5
     mobs = []
     score = 0
     safe = true
     pOne.mobsKilled = 0
+    pOne.hp = 100;
     gameOver = false
 
     draw();
@@ -325,7 +330,7 @@ let mouseHandler = (e) =>{
     angle = Math.atan2(rise,run) 
 }
 let clickHandler = (e) => {
-
+    pew1.play();
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
     let rise = relativeXY[1] - pOne.posY;
@@ -387,6 +392,6 @@ addMob(); // ADDING one mob for collision testing
 setInterval(addMob,spawnTime);// add a mob every spawn time
 //draw();// Need to call this to start the game
 
-startGame();
+//draw();
 
 // Borrowed Hit Detection for circle and square with this from this stack overflow page https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
