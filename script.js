@@ -23,6 +23,11 @@ let tempdy
 let ms = 5
 let mobs = []
 let score = 0
+let jer = new Image();
+jer.src = "/images/jeremy.png"
+let jerr = new Image();
+jerr.src = "/images/jeremyred.png"
+let angle
 
 let safe = true
 spawnTime = 2000
@@ -49,7 +54,7 @@ class Projectile {                          //this is the class for projectile s
         this.dy = dy;
     }
     rad = 5;
-    color = '#00f514';
+    color = 'red';
 }
 
 class Mob {
@@ -124,26 +129,39 @@ let playerMove = (obj) =>{                  //The function inspects keys press f
 }
 let dPlayer = () =>{                        //This draws the player 
     playerMove(pOne)
-    ctx.beginPath();
-    ctx.arc(pOne.posX, pOne.posY, pOne.pRadius, 0, Math.PI*2);
-    ctx.fillStyle = pOne.pColor;
-    ctx.fill();
-    ctx.closePath();
+    // ctx.beginPath();
+    // ctx.arc(pOne.posX, pOne.posY, pOne.pRadius, 0, Math.PI*2);
+    // ctx.fillStyle = pOne.pColor;
+    // ctx.fill();
+    // ctx.closePath();
+
+    ctx.save();
+    ctx.translate(pOne.posX,pOne.posY)
+    ctx.rotate(angle);
+    ctx.drawImage(jer,-19, -20)
+    ctx.restore();
+
 }
 let dProjectile = () =>{                    //This draws the projectiles from the player
     if(clip.clipArr.length == 0){
         return;
     }
+    ctx.save();
+    ctx.translate(pOne.posX,pOne.posY)
+    ctx.rotate(angle);
+    ctx.drawImage(jerr,-19, -20)
+    ctx.restore();
 
     for (i = 0; i < clip.clipArr.length; i++){
         ctx.beginPath();
         ctx.arc(clip.clipArr[i].x, clip.clipArr[i].y, clip.clipArr[i].rad, 0, Math.PI*2);
-        ctx.fillStyle = clip.clipArr[i].color;
+        ctx.fillStyle = "red";
         ctx.fill();
         ctx.closePath();
         clip.clipArr[i].x += clip.clipArr[i].dx;
         clip.clipArr[i].y += clip.clipArr[i].dy;
     }
+
 
 }
 let dMob = () =>{                           //This draws all the mobs
@@ -152,7 +170,7 @@ let dMob = () =>{                           //This draws all the mobs
         if(mobs[i].alive){
             ctx.beginPath();
             ctx.lineWidth = "4";
-            ctx.strokeStyle = "green";
+            //ctx.strokeStyle = "green";
             ctx.rect(mobs[i].x, mobs[i].y, mobs[i].width, mobs[i].height );
             ctx.fillStyle = "yellow"
             ctx.fill();
@@ -195,13 +213,6 @@ let collisionMob = () =>{
         if(mobs[i].y+mobs[i].height > canvas.height || mobs[i].y < 0){
             mobs[i].dy =-1* mobs[i].dy;
         }
-        // if((pOne.posX> mobs[i].x && pOne.posX <mobs[i].x + mobs[i].width) && (pOne.posY > mobs[i].y && pOne.posY <mobs[i].y + mobs[i].height)&& !pOne.attacked){
-        //     console.log(pOne.attacked)
-        //     console.log(pOne.hp)
-        //     if(mobs[i].alive){    
-        //     // Do stuff maybe 
-        //     }
-        // }
     }
 
     safe = mobs.every(intersects);
@@ -212,6 +223,7 @@ let collisionMob = () =>{
     if(!safe && !pOne.attacked){
         pOne.hp -= 10;
         pOne.attacked = true;
+        flashScreen();
     }
 
 
@@ -241,10 +253,9 @@ let intersects = (mob) =>                   //Collision detection from Circle to
         return !(cornerDistance_sq <= (pOne.pRadius^2));
     
 }
-
 let drawScore = () => {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#8008135";
+    ctx.fillStyle = "yellow";
     ctx.fillText("Score: "+ score, 8, 20);
     
     document.querySelector("#score").innerText =  `Score : ${score}`;
@@ -255,18 +266,28 @@ let drawScore = () => {
 
 }
 
+let flashScreen = () =>{                    //This will flash screen red called when player is hit
+    ctx.beginPath();
+    ctx.lineWidth = "4";
+    //ctx.strokeStyle = "green";
+    ctx.rect(0, 0, canvas.width, canvas.height );
+    ctx.fillStyle = "red"
+    ctx.fill();
+}
+
 let draw = () =>{                           // MAIN FUNCTION IS DRAW THIS IS WHERE ALL THE ACTION HAPPENS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    dMob();
     dPlayer();
+    dMob();
     dProjectile();
     collisionMob();
     drawScore();
     if(gOver()){                            //If game is over clear screen and draw GO
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = "160px Arial";
+        ctx.fillStyle = "red";
+
         ctx.fillText("GAME OVER", 30, 275);   
-        ctx.fillStyle = "#8008135";
 
         return;
     }
@@ -297,12 +318,19 @@ let startGame = async () =>{
 // ███████╗░░╚██╔╝░░███████╗██║░╚███║░░░██║░░░  ███████╗██║██████╔╝░░░██║░░░███████╗██║░╚███║███████╗██║░░██║██████╔╝
 // ╚══════╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚══════╝╚═╝╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═════╝░
 
+let mouseHandler = (e) =>{
+    let relativeXY = relMouseCord(e);
+    let rise = relativeXY[1] - pOne.posY;
+    let run = relativeXY[0] - pOne.posX;
+    angle = Math.atan2(rise,run) 
+}
 let clickHandler = (e) => {
+
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
     let rise = relativeXY[1] - pOne.posY;
     let run = relativeXY[0] - pOne.posX;
-    let angle = Math.atan2(rise,run)    // This gets the angle from the player to where the mouse is
+    angle = Math.atan2(rise,run)    // This gets the angle from the player to where the mouse is
     tempdx = Math.cos(angle) * 5        // This sets the velocity of the projectile in the X direction
     tempdy = Math.sin(angle) * 5        // This sets the velocity of the projectile in the Y direction
     let bullet = new Projectile(pOne.posX,pOne.posY,tempdx,tempdy)
@@ -351,6 +379,8 @@ let keyUpHandler = (e) =>{
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("click",clickHandler,false);
+document.addEventListener("mousemove",mouseHandler,false);
+
 
 
 addMob(); // ADDING one mob for collision testing

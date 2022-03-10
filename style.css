@@ -22,7 +22,7 @@ kbd {
 
 canvas { 
     /* background: rgb(41, 41, 41); */
-    margin: 20px;
+    margin: 20px 0px 20px 0px;
     width:  1024px;
     height: 526px;
     border: 3px solid white;
@@ -38,13 +38,16 @@ canvas {
     justify-content: center;
     margin: 0 auto;
     flex: wrap;
-    border: 3px solid white;
 
 }
 
 #left-content{
     border: 3px solid black;
     width: 300px;
+    padding-top: 30px;
+    background-color: #3f3f3f;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23868686' fill-opacity='0.45' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    margin: 30px;
 
 
 }
@@ -53,13 +56,18 @@ canvas {
     border: 3px solid rgb(72, 255, 0);
     width:  1024px;
     height: 526px;
-    padding: 20px;
 
 }
 #right-content{
     border: 3px solid black;
     width: 300px;
     justify-content: center;
+    padding-top: 30px;
+    background-color: #3f3f3f;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23868686' fill-opacity='0.45' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    margin: 30px;
+
+
 }
 #restart{
     justify-content: center;
