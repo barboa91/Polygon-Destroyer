@@ -55,15 +55,23 @@ canvas {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23868686' fill-opacity='0.45' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
     margin: 30px;
     border-radius: 15px;
+    font-size: 1.5em;
 
 
 
+}
+#hscore{
+    text-align: left;
 }
 #main-content{
     /* flex-basis: 100%; */
     border: 3px solid rgb(72, 255, 0);
     width:  1024px;
     height: 526px;
+
+}
+.rightbox{
+    padding: 10px;
 
 }
 #right-content{
@@ -76,22 +84,50 @@ canvas {
     margin: 30px;
     border-radius: 15px;
     position: relative;
+    font-size: 1.5em;
 
 
 
 }
 #restart{
-    width: 200px;
-    height: 100px;
+    /* width: 200px; */
+    /* width: 98%; */
+    /* height: 100px; */
     border: 3px solid black;
     margin: 0 auto;
-    font-size: 2.8em;
-    text-align:justify;
+    margin-left: 5px;
+    font-size: 2.8rem;
+    text-align:center;
     display: inline-block;
-    bottom: 0;
+    bottom: 20px;
     position: absolute;
     background-color: red;
     left: 0px;
+    padding: 0% 10% 0% 10%;
+    border-radius: 14px;
+    box-shadow: 5px 10px #888888;
+
+    
+}
+
+
+#restart:hover{
+    /* width: 200px; */
+    /* width: 98%; */
+    /* height: 100px; */
+    border: 3px solid black;
+    margin: 0 auto;
+    margin-left: 5px;
+    font-size: 2.8rem;
+    text-align:center;
+    display: inline-block;
+    bottom: 20px;
+    position: absolute;
+    background-color: blue;
+    left: 0px;
+    padding: 0% 10% 0% 10%;
+    border-radius: 14px;
+    /* box-shadow: 5px 10px #888888; */
 
     
 }

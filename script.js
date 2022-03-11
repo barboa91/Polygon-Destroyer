@@ -23,14 +23,27 @@ let tempdy
 let ms = 5
 let mobs = []
 let score = 0
+let hScore = 0
+let mostKilled = 0
 let jer = new Image();
 jer.src = "/images/jeremy.png"
 let jerr = new Image();
 jerr.src = "/images/jeremyred.png"
 let angle
 
+
+
+
 let pew1 = new Audio();
 pew1.src = '/sounds/pew1.mp3'
+let bang1 = new Audio();
+bang1.src ='/sounds/bang.mp3'
+// bang1.loop = true;
+
+
+
+let audioarr = [pew1,bang1];
+let audi = 0
 
 let safe = true
 spawnTime = 2000
@@ -267,6 +280,12 @@ let drawScore = () => {
     document.querySelector("#mobs-destroyed").innerText =  `Polys Destroyed: ${pOne.mobsKilled}`;
     ctx.fillText("Hit Points : " + pOne.hp, 8, 60);
     document.querySelector("#hit-points").innerText =  `Hit Points : ${pOne.hp}`;
+    score > hScore ? hScore = score : false;
+    document.querySelector("#hscore").innerText =  `High Score : ${hScore}`;
+    pOne.mobsKilled > mostKilled ? mostKilled = pOne.mobsKilled : false;
+    document.querySelector("#most-destroyed").innerText =  `Most Destroyed: ${mostKilled}`;
+
+
 
 }
 
@@ -330,7 +349,11 @@ let mouseHandler = (e) =>{
     angle = Math.atan2(rise,run) 
 }
 let clickHandler = (e) => {
-    pew1.play();
+     audioarr[audi].play();
+
+    audi = (audi + 1) % 2;
+    
+
     console.log(e)// add an object when clicked     
     let relativeXY = relMouseCord(e);
     let rise = relativeXY[1] - pOne.posY;
@@ -392,6 +415,6 @@ addMob(); // ADDING one mob for collision testing
 setInterval(addMob,spawnTime);// add a mob every spawn time
 //draw();// Need to call this to start the game
 
-//draw();
+draw();
 
 // Borrowed Hit Detection for circle and square with this from this stack overflow page https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
