@@ -3,9 +3,9 @@
 
 ## Description
 
-You are the protaganist in this game called Polygon Destroyer. Your job (a circle) is to eliminate the onslaught of polygons that want to get to close. Fend them off by launching Smaller versions of yourself. If you miss to many times, you will have exausted yourself and disapear! 
+You are the protaganist in this game called Polygon Destroyer. Your job (a circle) is to eliminate the onslaught of polygons that want to get to close. Fend them off by shooting lasers out of Jeremy's eyes!
 
-In order to stay alive, land successful hits on the polygons to absorb their strength.
+In order to stay alive, land successful hits on the polygons to increase your score
 
 ### Skills to improve
 
@@ -22,20 +22,41 @@ For me part of this project is to improve my skills in all aspects of javaScript
 
 
 
+## Where I was
+
+![Start of project](https://i.imgur.com/uRt9awE.gif)
+
 ## Where I am
 
-So far, I have been able to make the player move in all directions on the page as well as create a projectile that moves from the origin of the player. 
-
-I have also implimented collision detection on the walls of the game box so that the player will not be able to escape the game area. I have 3 event listeners that currently listen for mouseclicks to shoot, and key ups and downs for movement.
-
-![this is an image](https://i.imgur.com/uRt9awE.gif)
+![Start of project](https://i.imgur.com/6dSosNk.gif)
 
 
-## What I need to do
 
-I need to add enemies and collision detection for them as well. after I am able to add collision detection, I will be able to remove them as well as increase the score.
+## What I have done
 
-I also need to add a game over screen. As well as style the page.
+-[x] Added canvas
+
+-[x] Moved player around
+
+-[x]shoot projectiles
+
+-[x]add collision detection (This was the most difficult task)
+
+-[x]added rotation to player
+
+-[x]added some css elements
+
+-[x]added score board
+
+-[x]added restart button
+
+-[x]added sound
+
+-[x]deployed to surge
+
+[SURGE URL](bashful-respect.surge.sh)
+
+
 
 ***
 
