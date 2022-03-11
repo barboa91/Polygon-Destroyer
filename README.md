@@ -34,25 +34,25 @@ For me part of this project is to improve my skills in all aspects of javaScript
 
 ## What I have done
 
--[x] Added canvas
+- [x] Added canvas
 
--[x] Moved player around
+- [x] Moved player around
 
--[x]shoot projectiles
+- [x]shoot projectiles
 
--[x]add collision detection (This was the most difficult task)
+- [x]add collision detection (This was the most difficult task)
 
--[x]added rotation to player
+- [x]added rotation to player
 
--[x]added some css elements
+- [x]added some css elements
 
--[x]added score board
+- [x]added score board
 
--[x]added restart button
+- [x]added restart button
 
--[x]added sound
+- [x]added sound
 
--[x]deployed to surge
+- [x]deployed to surge
 
 [SURGE URL](bashful-respect.surge.sh)
 
